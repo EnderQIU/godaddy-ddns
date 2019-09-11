@@ -7,7 +7,7 @@
 #                        hostname
 #
 # positional arguments:
-#   hostname         DNS fully-qualified host name with an 'A' record.  If the hostname consists of only a domain name
+#   hostname         DNS fully-qualified host name with an 'A/AAAA' record.  If the hostname consists of only a domain name
 #                    (i.e., it contains only one period), the record for '@' is updated.
 #
 # optional arguments:
@@ -38,7 +38,7 @@
 
 prog='godaddy-ddns'
 version='0.5'
-author='Carl Edman (CarlEdman@gmail.com)'
+author='Carl Edman (CarlEdman@gmail.com), EnderQIU (a34560824@gmail.com)'
 
 import sys, json, argparse, socket
 
@@ -56,10 +56,10 @@ parser.add_argument('--version', action='version',
   version='{} {}'.format(prog, version))
 
 parser.add_argument('hostname', type=str,
-  help='DNS fully-qualified host name with an A record.  If the hostname consists of only a domain name (i.e., it contains only one period), the record for @ is updated.')
+  help='DNS fully-qualified host name with an A or AAAA record.  If the hostname consists of only a domain name (i.e., it contains only one period), the record for @ is updated.')
 
 parser.add_argument('--ip', type=str, default=None,
-  help='DNS Address (defaults to public WAN address from http://ipv4.icanhazip.com/)')
+  help='DNS Address (defaults to public WAN address from https://icanhazip.com/)')
 
 parser.add_argument('--type', type=str, default='A', choices=['A', 'AAAA'],
   help='DNS resolve type. A for ipv4 (default), AAAA for ipv6.')
@@ -121,6 +121,8 @@ def main():
       if ipslist[0] == dnsaddr:
         msg = '"{}" already has IP address "{}".'.format(args.hostname, dnsaddr)
         raise Exception(msg)
+    except socket.gaierror:  # [Errno -2] Name or service not known
+      pass
     except Exception as e:
       print(e)
       return
@@ -139,7 +141,7 @@ def main():
     return
 
   if resp.status_code==400:
-    msg = 'Unable to set IP address: GoDaddy API URL ({}) was malformed.'.format(req.full_url)
+    msg = 'Unable to set IP address: GoDaddy API URL ({}) was malformed.'.format(resp.url)
   elif resp.status_code==401:
     if args.key and args.secret:
       msg = '''Unable to set IP address: --key or --secret option incorrect.

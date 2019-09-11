@@ -25,7 +25,7 @@ Invoke the program like this:
 
      positional arguments:
 
-     hostname         DNS fully-qualified host name with an 'A' record.  If the hostname consists of only a domain name
+     hostname         DNS fully-qualified host name with an 'A/AAAA' record.  If the hostname consists of only a domain name
                       (i.e., it contains only one period), the record for '@' is updated.
 
      optional arguments:
