@@ -64,6 +64,9 @@ parser.add_argument('--ip', type=str, default=None,
 parser.add_argument('--type', type=str, default='A', choices=['A', 'AAAA'],
   help='DNS resolve type. A for ipv4 (default), AAAA for ipv6.')
 
+parser.add_argument('--type', type=str, default='A', choices=['A', 'AAAA'],
+  help='DNS resolve type. A for ipv4 (default), AAAA for ipv6.')
+
 parser.add_argument('--key', type=str, default='',
   help='GoDaddy production key')
 
