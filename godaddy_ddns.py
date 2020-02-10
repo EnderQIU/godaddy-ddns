@@ -126,7 +126,11 @@ def main():
     except Exception as e:
       print(e)
       return
-             
+  
+  if args.ttl < 600:
+      msg = 'TTL {} is under 600.'.format(args.ttl)
+      raise Exception(msg)
+
   url = 'https://api.godaddy.com/v1/domains/{}/records/{}/{}'.format('.'.join(hostnames[1:]), args.type, hostnames[0])
   headers = {
     'Content-Type': 'application/json',
